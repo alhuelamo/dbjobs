@@ -121,6 +121,16 @@ class DatabricksApiSpec extends AnyWordSpec with Matchers {
 
       actualRunIds should contain theSameElementsAs expectedRunIds
     }
+
+    "returns an empty list on an empty response" in {
+      val plainResponse = "{}"
+
+      val expectedRunIds = List()
+
+      val actualRunIds = DatabricksApi.parseRunIds(plainResponse)
+
+      actualRunIds should contain theSameElementsAs expectedRunIds
+    }
   }
 
 }

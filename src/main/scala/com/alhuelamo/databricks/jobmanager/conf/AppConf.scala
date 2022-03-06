@@ -1,5 +1,7 @@
 package com.alhuelamo.databricks.jobmanager.conf
 
+import caseapp._
+
 final case class AppConf(
     action: String,
     databricksWs: DatabricksWorkspace,
@@ -8,41 +10,29 @@ final case class AppConf(
 )
 
 object AppConf {
-  def apply(command: Command): AppConf =
-    AppConf(
-      command.name,
-      DatabricksWorkspace(command.profile),
-      parseJobIds(command.jobIds),
-      command.plan
-    )
+  val actionStart = "start"
+  val actionStop  = "stop"
 
-  private def parseJobIds(jobIdsStr: String) =
+  def apply(command: DjmCommand): AppConf = command match {
+    case Start(CommonOptions(profile, jobIds, plan)) =>
+      AppConf(
+        actionStart,
+        DatabricksWorkspace(profile),
+        parseJobIds(jobIds),
+        plan
+      )
+    case Stop(CommonOptions(profile, jobIds, plan)) =>
+      AppConf(
+        actionStop,
+        DatabricksWorkspace(profile),
+        parseJobIds(jobIds),
+        plan
+      )
+  }
+
+  private[conf] def parseJobIds(jobIdsStr: String) =
     jobIdsStr
       .split(",")
       .map(_.strip().toLong)
       .toList
-}
-
-sealed trait Command {
-  def profile: String
-  def jobIds: String
-  def plan: Boolean
-
-  def name: String
-}
-
-final case class StartCommand(
-    profile: String,
-    jobIds: String,
-    plan: Boolean
-) extends Command {
-  override def name: String = "start"
-}
-
-final case class StopCommand(
-    profile: String,
-    jobIds: String,
-    plan: Boolean
-) extends Command {
-  override def name: String = "stop"
 }
