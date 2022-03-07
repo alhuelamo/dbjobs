@@ -14,13 +14,13 @@ object Actions {
       if (activeRuns.isEmpty)
         println("  no active runs found.")
       else
-        activeRuns.foreach(cancelRun(_, ws))
+        activeRuns.foreach(runId => cancelRun(runId, ws))
     } catch {
       jobNotFound
     }
   }
 
-  private def cancelRun(runId: Int, ws: DatabricksWorkspace)(implicit conf: AppConf): Unit = {
+  private def cancelRun(runId: Long, ws: DatabricksWorkspace)(implicit conf: AppConf): Unit = {
     println(s"  on run $runId")
 
     if (conf.plan) {

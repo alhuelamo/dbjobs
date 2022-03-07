@@ -4,7 +4,7 @@ import com.alhuelamo.databricks.jobmanager.conf.DatabricksWorkspace
 
 object DatabricksApi {
 
-  def getActiveJobRuns(jobId: Long, ws: DatabricksWorkspace): List[Int] = {
+  def getActiveJobRuns(jobId: Long, ws: DatabricksWorkspace): List[Long] = {
     val response = requests.get(
       url = s"${ws.host}/api/2.1/jobs/runs/list",
       headers = defaultHeaders(ws),
@@ -22,7 +22,7 @@ object DatabricksApi {
     parseRunIds(response.text())
   }
 
-  private[jobmanager] def parseRunIds(textResponse: String): List[Int] = {
+  private[jobmanager] def parseRunIds(textResponse: String): List[Long] = {
     val runJson = ujson.read(textResponse)
 
     (for {
@@ -31,7 +31,7 @@ object DatabricksApi {
       runArr <- runs.arrOpt
     } yield {
       runArr
-        .map(_.obj("run_id").num.toInt)
+        .map(_.obj("run_id").num.toLong)
         .toList
     }).getOrElse(List.empty)
   }
