@@ -29,7 +29,8 @@ lazy val root = project
       "com.lihaoyi" %% "requests" % "0.7.0" % Compile,
       "com.lihaoyi" %% "ujson"    % "0.9.6" % Compile,
       // Tests
-      "org.scalatest" %% "scalatest" % "3.2.10" % Test
+      "org.scalactic" %% "scalactic" % "3.2.11",
+      "org.scalatest" %% "scalatest" % "3.2.11" % Test,
     ),
 
     Compile / mainClass := Some("com.alhuelamo.databricks.jobmanager.Main"),
