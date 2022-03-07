@@ -4,7 +4,7 @@ import caseapp._
 import com.alhuelamo.databricks.jobmanager.conf._
 import shapeless.BuildInfo
 
-object App extends CommandApp[DjmCommand] {
+object Main extends CommandApp[DjmCommand] {
   override def appName: String = "Databricks Job Manager"
   override def appVersion: String = BuildInfo.version
   override def progName: String = "dbjobs"
