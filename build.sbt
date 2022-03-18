@@ -10,7 +10,7 @@ inThisBuild(List(
       url("https://alhuelamo.com"),
     )
   ),
-  scalaVersion := "2.13.8",
+  scalaVersion := "3.1.1",
   versionScheme := Some("early-semver"),
 ))
 
@@ -23,11 +23,11 @@ lazy val root = project
 
     libraryDependencies ++= Seq(
       // Config
-      "com.github.alexarchambault" %% "case-app" % "2.1.0-M13",
+      "com.monovore" %% "decline" % "2.2.0",
       "org.ini4j"                  % "ini4j"     % "0.5.4",
       // Http
       "com.lihaoyi" %% "requests" % "0.7.0" % Compile,
-      "com.lihaoyi" %% "ujson"    % "0.9.6" % Compile,
+      "com.lihaoyi" %% "ujson"    % "1.5.0" % Compile,
       // Tests
       "org.scalactic" %% "scalactic" % "3.2.11",
       "org.scalatest" %% "scalatest" % "3.2.11" % Test,

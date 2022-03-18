@@ -3,19 +3,21 @@ package com.alhuelamo.databricks.jobmanager
 import scala.util.control.NonFatal
 import com.alhuelamo.databricks.jobmanager.DatabricksApi.ApiException
 import com.alhuelamo.databricks.jobmanager.conf.{AppConf, DatabricksWorkspace}
+import scala.util.Try
 
 object Actions {
 
   def stopActiveRuns(jobId: Long)(implicit conf: AppConf): Unit = {
     val ws = conf.databricksWs
     println(s"Stopping job $jobId")
-    try {
+
+    Try {
       val activeRuns = DatabricksApi.getActiveJobRuns(jobId, ws)
       if (activeRuns.isEmpty)
         println("  no active runs found.")
       else
         activeRuns.foreach(runId => cancelRun(runId, ws))
-    } catch {
+    } recover {
       jobNotFound
     }
   }
@@ -24,9 +26,9 @@ object Actions {
     println(s"  on run $runId")
 
     if (conf.plan) {
-      try {
+      Try {
         DatabricksApi.cancelJobRun(runId, ws)
-      } catch {
+      } recover {
         runNotFound
       }
     }
@@ -35,9 +37,9 @@ object Actions {
   def startRuns(jobId: Long)(implicit conf: AppConf): Unit = {
     println(s"Starting job $jobId")
     if (conf.plan) {
-      try {
+      Try {
         DatabricksApi.triggerJobRun(jobId, conf.databricksWs)
-      } catch {
+      } recover {
         jobNotFound
       }
     }
