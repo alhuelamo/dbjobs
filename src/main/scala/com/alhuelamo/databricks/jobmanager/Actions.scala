@@ -25,7 +25,7 @@ object Actions {
   private def cancelRun(runId: Long, ws: DatabricksWorkspace)(implicit conf: AppConf): Unit = {
     println(s"  on run $runId")
 
-    if (conf.plan) {
+    if (!conf.plan) {
       Try {
         DatabricksApi.cancelJobRun(runId, ws)
       } recover {
@@ -36,7 +36,7 @@ object Actions {
 
   def startRuns(jobId: Long)(implicit conf: AppConf): Unit = {
     println(s"Starting job $jobId")
-    if (conf.plan) {
+    if (!conf.plan) {
       Try {
         DatabricksApi.triggerJobRun(jobId, conf.databricksWs)
       } recover {
