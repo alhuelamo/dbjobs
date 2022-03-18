@@ -3,6 +3,8 @@ package com.alhuelamo.databricks.jobmanager.conf
 import com.monovore.decline.*
 
 object Cli {
+  val opts = (action, profile, jobIds, plan)
+
   val action: Opts[String] = Opts.argument[String](metavar = "action")
     .validate("Must be 'start' or 'stop'!")(Set(AppConf.actionStart, AppConf.actionStop))
 

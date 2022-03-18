@@ -8,8 +8,7 @@ object Main extends CommandApp(
   name = "dbjobs",
   header = "Databricks Job Manager",
   main = {
-    val opts = (Cli.action, Cli.profile, Cli.jobIds, Cli.plan)
-    opts.mapN { (action, profile, jobIds, plan) =>
+    Cli.opts.mapN { (action, profile, jobIds, plan) =>
       implicit val conf = AppConf(action, profile, jobIds, plan)
 
       conf.action match {
