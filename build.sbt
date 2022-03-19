@@ -14,6 +14,21 @@ inThisBuild(List(
   versionScheme := Some("early-semver"),
 ))
 
+// CI/CD generation
+ThisBuild / githubWorkflowJavaVersions := Seq(JavaSpec.graalvm("21.3.0", "11"))
+ThisBuild / githubWorkflowTargetTags := Seq("v*")
+ThisBuild / githubWorkflowPublishTargetBranches := List(
+  RefPredicate.StartsWith(Ref.Tag("v")),
+  RefPredicate.Equals(Ref.Branch("main"))
+)
+
+ThisBuild / githubWorkflowPublish := Seq(
+  WorkflowStep.Sbt(
+    List("ci-release"),
+    id = Some("release")
+  )
+)
+
 lazy val root = project
   .in(file("."))
   .enablePlugins(JavaAppPackaging, NativeImagePlugin)
