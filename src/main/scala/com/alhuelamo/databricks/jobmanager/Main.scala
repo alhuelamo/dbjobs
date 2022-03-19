@@ -22,7 +22,7 @@ object Main
     )
 
 object Cli {
-  val opts = (action, profile, jobIds, plan)
+  def opts = (action, profile, jobIds, plan)
 
   val action: Opts[ActionKey] = Opts
     .argument[String](metavar = "action")
