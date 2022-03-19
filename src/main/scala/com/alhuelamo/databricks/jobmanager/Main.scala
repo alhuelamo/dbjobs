@@ -9,7 +9,7 @@ object Main extends CommandApp(
   header = "Databricks Job Manager",
   main = {
     Cli.opts.mapN { (action, profile, jobIds, plan) =>
-      implicit val conf = AppConf(action, profile, jobIds, plan)
+      given conf: AppConf = AppConf(action, profile, jobIds, plan)
 
       conf.action match {
         case AppConf.`actionStart` => conf.jobIds.foreach(Actions.startRuns)

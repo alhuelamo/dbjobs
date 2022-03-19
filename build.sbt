@@ -24,10 +24,10 @@ lazy val root = project
     libraryDependencies ++= Seq(
       // Config
       "com.monovore" %% "decline" % "2.2.0",
-      "org.ini4j"                  % "ini4j"     % "0.5.4",
+      "org.ini4j"    %  "ini4j"   % "0.5.4",
       // Http
-      "com.lihaoyi" %% "requests" % "0.7.0" % Compile,
-      "com.lihaoyi" %% "ujson"    % "1.5.0" % Compile,
+      "com.lihaoyi" %% "requests" % "0.7.0",
+      "com.lihaoyi" %% "ujson"    % "1.5.0",
       // Tests
       "org.scalactic" %% "scalactic" % "3.2.11",
       "org.scalatest" %% "scalatest" % "3.2.11" % Test,

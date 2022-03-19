@@ -7,14 +7,14 @@ import scala.util.Try
 
 object Actions {
 
-  def stopActiveRuns(jobId: Long)(implicit conf: AppConf): Unit = {
+  def stopActiveRuns(jobId: Long)(using conf: AppConf): Unit = {
     val ws = conf.databricksWs
     println(s"Stopping job $jobId")
 
     Try {
       val activeRuns = DatabricksApi.getActiveJobRuns(jobId, ws)
       if (activeRuns.isEmpty)
-        println("  no active runs found.")
+        println("  no active runs found for this job.")
       else
         activeRuns.foreach(runId => cancelRun(runId, ws))
     } recover {
@@ -22,7 +22,7 @@ object Actions {
     }
   }
 
-  private def cancelRun(runId: Long, ws: DatabricksWorkspace)(implicit conf: AppConf): Unit = {
+  private def cancelRun(runId: Long, ws: DatabricksWorkspace)(using conf: AppConf): Unit = {
     println(s"  on run $runId")
 
     if (!conf.plan) {
@@ -34,7 +34,7 @@ object Actions {
     }
   }
 
-  def startRuns(jobId: Long)(implicit conf: AppConf): Unit = {
+  def startRuns(jobId: Long)(using conf: AppConf): Unit = {
     println(s"Starting job $jobId")
     if (!conf.plan) {
       Try {
