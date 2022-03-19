@@ -21,7 +21,7 @@ object AppConf {
 
 enum ActionKey(val value: String) {
   case Start extends ActionKey("start")
-  case Stop extends ActionKey("stop")
+  case Stop  extends ActionKey("stop")
 }
 
 object ActionKey {

@@ -4,26 +4,28 @@ import cats.implicits.*
 import com.monovore.decline.*
 import com.alhuelamo.databricks.jobmanager.conf.*
 
-object Main extends CommandApp(
-  name = "dbjobs",
-  header = "Databricks Job Manager",
-  main = {
-    Cli.opts.mapN { (action, profile, jobIds, plan) =>
-      given conf: AppConf = AppConf(action, profile, jobIds, plan)
+object Main
+    extends CommandApp(
+      name = "dbjobs",
+      header = "Databricks Job Manager",
+      main = {
+        Cli.opts.mapN { (action, profile, jobIds, plan) =>
+          given conf: AppConf = AppConf(action, profile, jobIds, plan)
 
-      import ActionKey.*
-      conf.action match {
-        case Start => conf.jobIds.foreach(Actions.startRuns)
-        case Stop  => conf.jobIds.foreach(Actions.stopActiveRuns)
+          import ActionKey.*
+          conf.action match {
+            case Start => conf.jobIds.foreach(Actions.startRuns)
+            case Stop  => conf.jobIds.foreach(Actions.stopActiveRuns)
+          }
+        }
       }
-    }
-  }
-)
+    )
 
 object Cli {
   val opts = (action, profile, jobIds, plan)
 
-  val action: Opts[ActionKey] = Opts.argument[String](metavar = "action")
+  val action: Opts[ActionKey] = Opts
+    .argument[String](metavar = "action")
     .map(ActionKey.apply)
 
   val profile: Opts[String] =
@@ -33,6 +35,5 @@ object Cli {
     .option[String]("job-ids", short = "s", help = "Comma-separated job IDs to manage")
     .map(s => s.split(",").map(_.trim.toLong).toVector)
 
-  val plan: Opts[Boolean] = Opts.flag("plan", help = "Enable to just show affected jobs and runs.")
-    .orFalse
+  val plan: Opts[Boolean] = Opts.flag("plan", help = "Enable to just show affected jobs and runs.").orFalse
 }
