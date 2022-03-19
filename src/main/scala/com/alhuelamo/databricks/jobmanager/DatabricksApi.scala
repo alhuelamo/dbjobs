@@ -6,7 +6,7 @@ object DatabricksApi {
 
   def getActiveJobRuns(jobId: Long, ws: DatabricksWorkspace): List[Long] = {
     val response = requests.get(
-      url = s"${ws.host}/api/2.1/jobs/runs/list",
+      url = dbUrl("jobs/runs/list", ws),
       headers = defaultHeaders(ws),
       params = Map(
         "active_only" -> "true",
@@ -38,7 +38,7 @@ object DatabricksApi {
 
   def cancelJobRun(runId: Long, ws: DatabricksWorkspace): Unit = {
     val response = requests.post(
-      url = s"${ws.host}/api/2.1/jobs/runs/cancel",
+      url = dbUrl("jobs/runs/cancel", ws),
       headers = defaultHeaders(ws),
       data = ujson.Obj("run_id" -> runId.toString),
       check = false
@@ -51,7 +51,7 @@ object DatabricksApi {
 
   def triggerJobRun(jobId: Long, ws: DatabricksWorkspace): Unit = {
     val response = requests.post(
-      url = s"${ws.host}/api/2.1/jobs/run-now",
+      url = dbUrl("jobs/run-now", ws),
       headers = defaultHeaders(ws),
       data = ujson.Obj("job_id" -> jobId.toString),
       check = false
@@ -68,5 +68,8 @@ object DatabricksApi {
     "Authorization" -> s"Bearer ${ws.token}",
     "Content-Type"  -> "application/json"
   )
+
+  private[jobmanager] def dbUrl(endpoint: String, ws: DatabricksWorkspace) =
+    s"https://${ws.host}/api/2.1/$endpoint"
 
 }

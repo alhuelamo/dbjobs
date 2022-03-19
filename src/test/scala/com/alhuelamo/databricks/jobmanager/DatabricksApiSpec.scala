@@ -2,6 +2,7 @@ package com.alhuelamo.databricks.jobmanager
 
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
+import com.alhuelamo.databricks.jobmanager.conf.DatabricksWorkspace
 
 class DatabricksApiSpec extends AnyWordSpec with Matchers {
 
@@ -130,6 +131,18 @@ class DatabricksApiSpec extends AnyWordSpec with Matchers {
       val actualRunIds = DatabricksApi.parseRunIds(plainResponse)
 
       actualRunIds should contain theSameElementsAs expectedRunIds
+    }
+  }
+
+  "dbUrl method" should {
+    "generate valid Databricks urls out of valid configuration" in {
+      val ws = DatabricksWorkspace(host = "myhost", token = "mytoken")
+      
+      val actual = DatabricksApi.dbUrl("jobs/list", ws)
+
+      val expected = "https://myhost/api/2.1/jobs/list"
+      
+      actual shouldBe expected
     }
   }
 
