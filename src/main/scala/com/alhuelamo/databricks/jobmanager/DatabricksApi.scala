@@ -70,6 +70,6 @@ object DatabricksApi {
   )
 
   private[jobmanager] def dbUrl(endpoint: String, ws: DatabricksWorkspace) =
-    s"https://${ws.host}/api/2.1/$endpoint"
+    s"${ws.host}/api/2.1/$endpoint"
 
 }

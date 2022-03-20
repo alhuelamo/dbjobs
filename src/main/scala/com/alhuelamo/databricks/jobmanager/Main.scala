@@ -12,6 +12,9 @@ object Main
         Cli.opts.mapN { (action, profile, jobIds, plan) =>
           given conf: AppConf = AppConf(action, profile, jobIds, plan)
 
+          if (conf.plan)
+            println("WARNING! 'plan' flag is enabled! No actions will be done.")
+
           import ActionKey.*
           conf.action match {
             case Start => conf.jobIds.foreach(Actions.startRuns)
