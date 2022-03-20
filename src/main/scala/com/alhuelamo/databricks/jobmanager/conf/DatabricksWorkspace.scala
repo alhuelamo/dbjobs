@@ -15,7 +15,9 @@ object DatabricksWorkspace {
   }
 
   def apply(profile: String, ini: Ini): DatabricksWorkspace = {
-    val section = ini.get(profile)
+    val section = Option(ini.get(profile))
+      .getOrElse(throw new IllegalStateException(s"Profile '$profile' not found!"))
+
     DatabricksWorkspace(
       host = section.get("host"),
       token = section.get("token")
