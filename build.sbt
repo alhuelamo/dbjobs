@@ -12,6 +12,9 @@ inThisBuild(List(
   ),
   scalaVersion := "3.1.1",
   versionScheme := Some("early-semver"),
+  // Sonatype location
+  sonatypeCredentialHost := "s01.oss.sonatype.org",
+  sonatypeRepository := "https://s01.oss.sonatype.org/service/local"
 ))
 
 // CI/CD generation
@@ -28,6 +31,15 @@ ThisBuild / githubWorkflowPublish := Seq(
     id = Some("release")
   )
 )
+
+ThisBuild / githubWorkflowEnv ++= List(
+  "PGP_PASSPHRASE",
+  "PGP_SECRET",
+  "SONATYPE_PASSWORD",
+  "SONATYPE_USERNAME"
+).map { envKey =>
+  envKey -> s"$${{ secrets.$envKey }}"
+}.toMap
 
 lazy val root = project
   .in(file("."))
