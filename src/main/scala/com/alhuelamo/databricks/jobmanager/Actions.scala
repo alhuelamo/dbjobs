@@ -11,14 +11,14 @@ object Actions {
     val ws = conf.databricksWs
     println(s"Stopping job $jobId")
 
-    Try {
+    try {
       val activeRuns = DatabricksApi.getActiveJobRuns(jobId, ws)
       if (activeRuns.isEmpty)
         println("  no active runs found for this job.")
       else
         activeRuns.foreach(runId => cancelRun(runId, ws))
-    } recover {
-      jobNotFound
+    } catch {
+      handleApiErrors("job")
     }
   }
 
@@ -26,10 +26,10 @@ object Actions {
     println(s"  on run $runId")
 
     if (!conf.plan) {
-      Try {
+      try {
         DatabricksApi.cancelJobRun(runId, ws)
-      } recover {
-        runNotFound
+      } catch {
+        handleApiErrors("run")
       }
     }
   }
@@ -37,25 +37,21 @@ object Actions {
   def startRuns(jobId: Long)(using conf: AppConf): Unit = {
     println(s"Starting job $jobId")
     if (!conf.plan) {
-      Try {
+      try {
         DatabricksApi.triggerJobRun(jobId, conf.databricksWs)
-      } recover {
-        jobNotFound
+      } catch {
+        handleApiErrors("job")
       }
     }
   }
 
-  private val jobNotFound: PartialFunction[Throwable, Unit] = {
-    case ApiException(_, 400) => println("  job not found!")
+  private def handleApiErrors(resource: String): PartialFunction[Throwable, Unit] = {
+    case ApiException(_, 400) => println(s"  $resource not found!")
+    case ex @ ApiException(_, 403) =>
+      println("  authentication error!")
+      throw ex
     case NonFatal(error) =>
-      println("  problem querying the job!")
-      throw error
-  }
-
-  private val runNotFound: PartialFunction[Throwable, Unit] = {
-    case ApiException(_, 400) => println(s"    run id not found!")
-    case NonFatal(error) =>
-      println("  problem cancelling the run!")
+      println(s"  problem querying the $resource!")
       throw error
   }
 
