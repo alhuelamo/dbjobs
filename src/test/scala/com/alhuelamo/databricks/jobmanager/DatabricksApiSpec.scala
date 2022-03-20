@@ -136,7 +136,7 @@ class DatabricksApiSpec extends AnyWordSpec with Matchers {
 
   "dbUrl method" should {
     "generate valid Databricks urls out of valid configuration" in {
-      val ws = DatabricksWorkspace(host = "myhost", token = "mytoken")
+      val ws = DatabricksWorkspace(host = "https://myhost", token = "mytoken")
       
       val actual = DatabricksApi.dbUrl("jobs/list", ws)
 
